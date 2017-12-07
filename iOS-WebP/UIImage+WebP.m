@@ -158,11 +158,17 @@ static void free_image_data(void *info, const void *data, size_t size)
     uint8_t *data = WebPDecodeRGBA([imgData bytes], [imgData length], &width, &height);
     CGDataProviderRef provider = CGDataProviderCreateWithData(config, data, config->options.scaled_width  * config->options.scaled_height * 4, free_image_data);
     
+    
+    
     CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
     CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault |kCGImageAlphaLast;
     CGColorRenderingIntent renderingIntent = kCGRenderingIntentDefault;
     
-    CGImageRef imageRef = CGImageCreate(width, height, 8, 32, 4 * width, colorSpaceRef, bitmapInfo, provider, NULL, YES, renderingIntent);
+    
+    CGImageRef imageRef = CGImageCreateWithJPEGDataProvider(provider, NULL, YES, renderingIntent);
+
+    
+    //CGImageRef imageRef = CGImageCreate(width, height, 8, 32, 4 * width, colorSpaceRef, bitmapInfo, provider, NULL, YES, renderingIntent);
     UIImage *result = [UIImage imageWithCGImage:imageRef];
     
     // Free resources to avoid memory leaks
